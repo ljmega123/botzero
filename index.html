@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero Marketing HQ | Admin Elite</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+</head>
+<body class="fade-in">
+    <div class="app-shell">
+        <!-- Sidebar Profissional -->
+        <aside class="sidebar">
+            <!-- Logo Area -->
+            <div class="sidebar-brand">
+                <div class="brand-logo">
+                    <i data-lucide="zap"></i>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">ZERO</span>
+                    <span class="brand-tagline">Marketing HQ</span>
+                </div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()" title="Recolher sidebar">
+                    <i data-lucide="panel-left-close"></i>
+                </button>
+            </div>
+
+            <!-- Search -->
+            <div class="sidebar-search">
+                <i data-lucide="search" style="width:16px"></i>
+                <input type="text" placeholder="Buscar..." id="sidebar-search-input">
+            </div>
+
+            <!-- Main Navigation -->
+            <div class="nav-section">
+                <span class="nav-label">Principal</span>
+                <a href="index.html" class="nav-link active">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                    <div class="nav-indicator"></div>
+                </a>
+                <a href="chat.html" class="nav-link">
+                    <i data-lucide="message-square"></i>
+                    <span>Chat AI</span>
+                    <div class="nav-indicator"></div>
+                </a>
+                <a href="notes.html" class="nav-link">
+                    <i data-lucide="folder-archive"></i>
+                    <span>Ativos</span>
+                    <span class="nav-badge" id="nav-badge-count">0</span>
+                </a>
+            </div>
+
+            <!-- Tools Section -->
+            <div class="nav-section">
+                <span class="nav-label">Ferramentas</span>
+                <a href="https://www.canva.com" target="_blank" class="nav-link">
+                    <i data-lucide="palette"></i>
+                    <span>Canva</span>
+                </a>
+                <a href="https://web.whatsapp.com/" target="_blank" class="nav-link">
+                    <i data-lucide="phone"></i>
+                    <span>WhatsApp</span>
+                </a>
+                <a href="https://www.capcut.com" target="_blank" class="nav-link">
+                    <i data-lucide="video"></i>
+                    <span>CapCut</span>
+                </a>
+                <a href="https://app.leonardo.ai" target="_blank" class="nav-link">
+                    <i data-lucide="wand-2"></i>
+                    <span>Leonardo AI</span>
+                </a>
+                <a href="https://chat.openai.com" target="_blank" class="nav-link">
+                    <i data-lucide="bot"></i>
+                    <span>ChatGPT</span>
+                </a>
+                <a href="https://drive.google.com" target="_blank" class="nav-link">
+                    <i data-lucide="cloud"></i>
+                    <span>Drive</span>
+                </a>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="nav-section">
+                <span class="nav-label">Acesso Rápido</span>
+                <a href="https://clubezerodividas.com.br/" target="_blank" class="nav-link highlight">
+                    <i data-lucide="globe"></i>
+                    <span>Site Oficial</span>
+                    <i data-lucide="external-link" style="width:12px; margin-left:auto;"></i>
+                </a>
+                <a href="https://www.instagram.com/clube_zero_dividas/" target="_blank" class="nav-link">
+                    <i data-lucide="instagram"></i>
+                    <span>Instagram</span>
+                </a>
+                <a href="https://pinterest.com" target="_blank" class="nav-link">
+                    <i data-lucide="image"></i>
+                    <span>Pinterest</span>
+                </a>
+            </div>
+
+            <!-- Bottom Actions -->
+            <div class="sidebar-footer">
+                <div class="nav-link" onclick="openSettingsModal()" style="cursor:pointer">
+                    <i data-lucide="settings"></i>
+                    <span>Configurações</span>
+                </div>
+                <div class="system-status">
+                    <div class="status-indicator online"></div>
+                    <span>Sistema Online</span>
+                    <span class="status-time" id="sidebar-time"></span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Stage -->
+        <main class="main-stage">
+            <header class="workspace-header">
+                <div class="header-content">
+                    <p class="welcome-msg" id="greeting">BOM DIA • Admin</p>
+                    <h1 class="page-title">Marketing Command Center</h1>
+                </div>
+                <div class="stat-group">
+                    <div class="stat-chip">
+                        <div class="dot active"></div>
+                        <span>Groq AI Ativa</span>
+                    </div>
+                    <div class="stat-chip">
+                        <i data-lucide="database" style="width:14px"></i>
+                        <span id="admin-notes-count">0</span> Ativos
+                    </div>
+                    <div class="stat-chip">
+                        <i data-lucide="clock" style="width:14px"></i>
+                        <span id="current-time"></span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <!-- Quick Access Dock Unificado (Sua preferência) -->
+                <div class="quick-access" style="background: var(--surface-glass); border: 1px solid var(--border);">
+                    <div class="quick-access-header">
+                        <i data-lucide="layout-grid" style="color:var(--primary); width:20px;"></i>
+                        <span class="quick-access-title">Acesso Rápido ADM</span>
+                    </div>
+                    <div class="quick-access-grid">
+                        <a href="https://www.canva.com" target="_blank" class="quick-link" data-tooltip="Abrir Canva Designer">
+                            <div class="quick-link-icon" style="background:rgba(0,196,204,0.15); color:#00c4cc;">
+                                <i data-lucide="layout"></i>
+                            </div>
+                            <span>Canva</span>
+                        </a>
+                        <a href="https://web.whatsapp.com/" target="_blank" class="quick-link" data-tooltip="WhatsApp Web Admin">
+                            <div class="quick-link-icon" style="background:rgba(37,211,102,0.15); color:#25d366;">
+                                <i data-lucide="message-circle"></i>
+                            </div>
+                            <span>WhatsApp</span>
+                        </a>
+                        <a href="https://www.capcut.com" target="_blank" class="quick-link" data-tooltip="Editor de Vídeo">
+                            <div class="quick-link-icon" style="background:rgba(255,100,100,0.15); color:#ff6464;">
+                                <i data-lucide="film"></i>
+                            </div>
+                            <span>CapCut</span>
+                        </a>
+                        <a href="https://drive.google.com/drive/folders/1bcsRdwX83J42RD-U7W59L2H3H6_u02t8" target="_blank" class="quick-link" data-tooltip="Arquivos de Apoio">
+                            <div class="quick-link-icon" style="background:rgba(255,188,0,0.15); color:#ffbc00;">
+                                <i data-lucide="folder-open"></i>
+                            </div>
+                            <span>Drive</span>
+                        </a>
+                        <a href="https://app.leonardo.ai" target="_blank" class="quick-link" data-tooltip="Gerador de Imagem AI">
+                            <div class="quick-link-icon" style="background:rgba(168,85,247,0.15); color:#a855f7;">
+                                <i data-lucide="wand-2"></i>
+                            </div>
+                            <span>Leonardo AI</span>
+                        </a>
+                        <a href="https://www.instagram.com/clube_zero_dividas/" target="_blank" class="quick-link" data-tooltip="Perfil Oficial">
+                            <div class="quick-link-icon" style="background:rgba(225,48,108,0.15); color:#e1306c;">
+                                <i data-lucide="instagram"></i>
+                            </div>
+                            <span>Instagram</span>
+                        </a>
+                        <a href="https://pinterest.com" target="_blank" class="quick-link" data-tooltip="Referências Visuais">
+                            <div class="quick-link-icon" style="background:rgba(230,0,35,0.15); color:#e60023;">
+                                <i data-lucide="image"></i>
+                            </div>
+                            <span>Pinterest</span>
+                        </a>
+                        <a href="https://chat.openai.com" target="_blank" class="quick-link" data-tooltip="ChatGPT Backup">
+                            <div class="quick-link-icon" style="background:rgba(16,185,129,0.15); color:#10b981;">
+                                <i data-lucide="bot"></i>
+                            </div>
+                            <span>ChatGPT</span>
+                        </a>
+                        <!-- Email Temporário e Canva Equipe Restaurados -->
+                        <a href="https://tempmail.la" target="_blank" class="quick-link" data-tooltip="Email Temporário">
+                            <div class="quick-link-icon" style="background:rgba(255,107,107,0.15); color:#ff6b6b;">
+                                <i data-lucide="mail"></i>
+                            </div>
+                            <span>Email Temp</span>
+                        </a>
+                        <a href="https://www.canva.com/brand/join?token=szXGuUeHVbghjU-vZFhIuA&referrer=team-invite" target="_blank" class="quick-link" data-tooltip="Canva Team">
+                            <div class="quick-link-icon" style="background:rgba(0,201,255,0.15); color:#00c9ff;">
+                                <i data-lucide="users"></i>
+                            </div>
+                            <span>Canva Equipe</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Stats Grid Sem Animação Excessiva -->
+                <div class="stats-grid" id="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-icon green">
+                            <i data-lucide="file-text"></i>
+                        </div>
+                        <div class="stat-card-value" id="total-assets">0</div>
+                        <div class="stat-card-label">Ativos Criados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon blue">
+                            <i data-lucide="message-square"></i>
+                        </div>
+                        <div class="stat-card-value" id="total-queries">0</div>
+                        <div class="stat-card-label">Consultas AI</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon yellow">
+                            <i data-lucide="star"></i>
+                        </div>
+                        <div class="stat-card-value" id="total-pinned">0</div>
+                        <div class="stat-card-label">Fixados VIP</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon red">
+                            <i data-lucide="trending-up"></i>
+                        </div>
+                        <div class="stat-card-value" id="today-date"></div>
+                        <div class="stat-card-label">Data Atual</div>
+                    </div>
+                </div>
+
+                <!-- Main Grid -->
+                <div class="grid-container">
+                    <!-- AI Studio com Glow -->
+                    <div class="studio-section">
+                        <div class="card ai-box" style="border: 1px solid var(--border-glow);">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i data-lucide="sparkles" style="color:var(--primary); animation: blink 2s infinite;"></i>
+                                    Assistente de Marketing Profissional
+                                </div>
+                                <div class="ai-tabs" id="gen-tabs">
+                                    <button class="ai-tab active" onclick="renderButtons('conteudo')">Conteúdo</button>
+                                    <button class="ai-tab" onclick="renderButtons('vendas')">Vendas</button>
+                                    <button class="ai-tab" onclick="renderButtons('visual')">Visual</button>
+                                    <button class="ai-tab" onclick="renderButtons('afiliado')">Afiliado</button>
+                                    <button class="ai-tab" onclick="renderButtons('estrategia')">Estratégia</button>
+                                </div>
+                            </div>
+                            
+                            <div class="chat-display" id="gen-output" style="background: var(--bg-gradient);">
+                                <div class="gen-placeholder" id="gen-placeholder">
+                                    <i data-lucide="zap" style="animation: pulse 1s infinite; color: var(--primary);"></i>
+                                    <h3 style="color: white; margin-top: 10px;">Comando de Admin Ativo</h3>
+                                    <p style="font-size: 0.8rem; color: var(--text-dim);">Aguardando instruções para processamento...</p>
+                                </div>
+                            </div>
+
+                            <div class="input-wrapper" style="border-radius: var(--radius-sm); border: 1px solid var(--border-hover);">
+                                <i data-lucide="terminal" style="width:18px; color:var(--primary)"></i>
+                                <input type="text" id="custom-prompt" placeholder="Digite seu comando estratégico..." onkeypress="if(event.key === 'Enter') generateCustom()">
+                                <button class="btn-primary" onclick="generateCustom()" style="padding: 10px 24px; animation: glow 4s infinite;">
+                                    <i data-lucide="play" style="width:14px"></i>
+                                    EXECUTAR
+                                </button>
+                            </div>
+
+                            <div class="gen-buttons" id="gen-buttons"></div>
+                        </div>
+                    </div>
+  </div>
+
+                    <!-- Library Section -->
+                    <div class="library-section">
+                        <div class="card" style="min-height: 100%;">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <i data-lucide="clock" style="color:var(--secondary)"></i>
+                                    Ativos Recentes
+                                </div>
+                                <a href="notes.html" class="btn-ghost" style="font-size: 0.75rem;">
+                                    Ver Todos
+                                    <i data-lucide="arrow-right" style="width:14px"></i>
+                                </a>
+                            </div>
+                            
+                            <div class="input-wrapper" style="margin-bottom: 20px; padding: 4px 10px;">
+                                <i data-lucide="search" style="width:14px; color:var(--text-dim)"></i>
+                                <input type="text" id="note-search" placeholder="Buscar ativos..." oninput="filterNotes()" style="font-size: 0.85rem; padding: 10px;">
+                            </div>
+
+                            <div class="notes-list" id="notes-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h3 style="font-size: 1.2rem; font-weight: 700;">Configurações</h3>
+                <button class="btn-ghost" onclick="closeSettingsModal()">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 8px; display: block;">Chave API Groq</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="key" style="width:16px; color:var(--text-dim)"></i>
+                        <input type="password" id="groq-key-input" placeholder="Cole sua chave API..." style="padding: 12px;">
+                    </div>
+                    <p style="font-size: 0.7rem; color: var(--text-dim); margin-top: 8px;">
+                        Obtelha em <a href="https://console.groq.com" target="_blank" style="color: var(--primary);">console.groq.com</a> (gratuito)
+                    </p>
+                </div>
+                
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 8px; display: block;">Modelo AI</label>
+                    <select id="ai-model-select" class="input-wrapper" style="width: 100%; padding: 12px; cursor: pointer;">
+                        <option value="llama-3.1-8b-instant">LLaMA-3.1 8B (Rápido)</option>
+                        <option value="llama-3.3-70b-versatile">LLaMA-3.3 70B (Poderoso)</option>
+                        <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary" onclick="saveSettings()">
+                    <i data-lucide="save"></i>
+                    Salvar Configurações
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast"></div>
+
+    <script type="module" src="/main.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            lucide.createIcons();
+            updateStats();
+            startClock();
+            renderButtons('conteudo');
+            updateSidebarTime();
+            setInterval(updateSidebarTime, 1000);
+            
+            const notes = JSON.parse(localStorage.getItem('czd_notes')) || [];
+            const badge = document.getElementById('nav-badge-count');
+            if (badge) badge.textContent = notes.length;
+        });
+
+        function updateSidebarTime() {
+            const now = new Date();
+            const timeEl = document.getElementById('sidebar-time');
+            if (timeEl) {
+                timeEl.textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('collapsed');
+            const toggleIcon = document.querySelector('.sidebar-toggle i');
+            if (toggleIcon) {
+                toggleIcon.setAttribute('data-lucide', sidebar.classList.contains('collapsed') ? 'panel-left-open' : 'panel-left-close');
+                lucide.createIcons();
+            }
+        }
+
+        function updateStats() {
+            const notes = JSON.parse(localStorage.getItem('czd_notes')) || [];
+            const queries = parseInt(localStorage.getItem('czd_total_queries')) || 0;
+            
+            document.getElementById('admin-notes-count').textContent = notes.length;
+            document.getElementById('total-assets').textContent = notes.length;
+            document.getElementById('total-queries').textContent = queries;
+            document.getElementById('total-pinned').textContent = notes.filter(n => n.pinned).length;
+            
+            const today = new Date();
+            document.getElementById('today-date').textContent = today.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+        }
+
+        function startClock() {
+            const updateTime = () => {
+                const now = new Date();
+                document.getElementById('current-time').textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                
+                const hour = now.getHours();
+                let greeting;
+                if (hour < 12) greeting = 'BOM DIA';
+                else if (hour < 18) greeting = 'BOA TARDE';
+                else greeting = 'BOA NOITE';
+                
+                document.getElementById('greeting').textContent = greeting + ' • Admin';
+            };
+            updateTime();
+            setInterval(updateTime, 1000);
+        }
+
+        function openSettingsModal() {
+            const modal = document.getElementById('settings-modal');
+            const savedKey = localStorage.getItem('czd_groq_key') || '';
+            const savedModel = localStorage.getItem('czd_ai_model') || 'llama-3.1-8b-instant';
+            
+            document.getElementById('groq-key-input').value = savedKey;
+            document.getElementById('ai-model-select').value = savedModel;
+            
+            modal.classList.add('active');
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settings-modal').classList.remove('active');
+        }
+
+        function saveSettings() {
+            const key = document.getElementById('groq-key-input').value.trim();
+            const model = document.getElementById('ai-model-select').value;
+            
+            if (key) localStorage.setItem('czd_groq_key', key);
+            localStorage.setItem('czd_ai_model', model);
+            
+            closeSettingsModal();
+            showToast('Configurações salvas com sucesso!');
+        }
+
+        document.getElementById('settings-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'settings-modal') closeSettingsModal();
+        });
+
+        window.updateStats = updateStats;
+        window.toggleSidebar = toggleSidebar;
+    </script>
+</body>
+</html>
