@@ -195,34 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ===========================
-// RENDER CATEGORY BUTTONS
-// ===========================
-function renderButtons(category) {
-    const container = document.getElementById('gen-buttons');
-    if (!container) return;
-    
-    container.innerHTML = '';
-    const buttons = PROMPT_MAP[category] || PROMPT_MAP.conteudo;
-    
-    buttons.forEach(({ label, key }) => {
-        const btn = document.createElement('button');
-        btn.className = 'gen-btn';
-        btn.innerHTML = `<span>${label}</span>`;
-        btn.onclick = () => {
-            lastKey = key;
-            generateContent(PROMPTS[key], key);
-        };
-        container.appendChild(btn);
-    });
-
-    // Update active tab
-    const tabs = document.querySelectorAll('.ai-tab, .gen-tab');
-    tabs.forEach(tab => tab.classList.remove('active'));
-    const activeTab = document.querySelector(`.ai-tab[onclick*="${category}"], .gen-tab[data-category="${category}"]`);
-    if (activeTab) activeTab.classList.add('active');
-}
-
-// ===========================
+// INIT// ===========================
 // AI ENGINE
 // ===========================
 async function generateContent(prompt, key = null, isUserInitiated = true) {
