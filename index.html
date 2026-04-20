@@ -40,9 +40,33 @@
                     <i data-lucide="palette"></i>
                     <span>Canva</span>
                 </a>
+                <a href="https://www.capcut.com" target="_blank" class="nav-link">
+                    <i data-lucide="video"></i>
+                    <span>CapCut</span>
+                </a>
                 <a href="https://app.leonardo.ai" target="_blank" class="nav-link">
                     <i data-lucide="wand-2"></i>
                     <span>Leonardo AI</span>
+                </a>
+                <a href="https://chat.openai.com" target="_blank" class="nav-link">
+                    <i data-lucide="bot"></i>
+                    <span>ChatGPT</span>
+                </a>
+                <a href="https://drive.google.com" target="_blank" class="nav-link">
+                    <i data-lucide="cloud"></i>
+                    <span>Drive</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <span class="nav-label">Social</span>
+                <a href="https://clubezerodividas.com.br/" target="_blank" class="nav-link">
+                    <i data-lucide="globe"></i>
+                    <span>Site Oficial</span>
+                </a>
+                <a href="https://www.instagram.com/clube_zero_dividas/" target="_blank" class="nav-link">
+                    <i data-lucide="instagram"></i>
+                    <span>Instagram</span>
                 </a>
             </div>
 
@@ -77,20 +101,49 @@
             </header>
 
             <div class="dashboard-content">
-                <div class="stats-grid" style="grid-template-columns: 1fr 1fr">
-                    <div class="stat-card">
-                        <div class="stat-card-icon green">
-                            <i data-lucide="zap"></i>
-                        </div>
-                        <div class="stat-card-value">Elite</div>
-                        <div class="stat-card-label">Plano Admin</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-icon red">
-                            <i data-lucide="calendar"></i>
-                        </div>
-                        <div class="stat-card-value" id="today-date">--</div>
-                        <div class="stat-card-label">Hoje</div>
+                <!-- Acesso Rápido Restaurado -->
+                <div class="quick-access">
+                    <div class="quick-access-grid">
+                        <a href="https://www.canva.com" target="_blank" class="quick-link">
+                            <div class="quick-link-icon" style="background:rgba(0,196,204,0.1); color:#00c4cc;"><i data-lucide="layout"></i></div>
+                            <span>Canva</span>
+                        </a>
+                        <a href="https://web.whatsapp.com/" target="_blank" class="quick-link">
+                            <div class="quick-link-icon" style="background:rgba(37,211, green0.1); color:#25d366;"><i data-lucide="message-circle"></i></div>
+                            <span>WhatsApp</span>
+                        </a>
+                        <a href="https://www.capcut.com" target="_blank" class="quick-link">
+                            <div class="quick-link-icon" style="background:rgba(255,100,100,0.1); color:#ff6464;"><i data-lucide="film"></i></div>
+                            <span>CapCut</span>
+                        </a>
+                        <a href="https://drive.google.com" target="_blank" class="quick-link">
+                            <div class="quick-link-icon" style="background:rgba(255,188,0,0.1); color:#ffbc00;"><i data-lucide="folder-open"></i></div>
+                            <span>Drive</span>
+                        </a>
+                        <a href="https://app.leonardo.ai" target="_blank" class="quick-link">
+                            <div class="quick-link-icon" style="background:rgba(168,85,247,0.1); color:#a855f7;"><i data-lucide="wand-2"></i></div>
+                            <span>Leonardo AI</span>
+                        </a>
+                        <a href="https://www.instagram.com/clube_zero_dividas/" target="_blank" class="quick-link">
+                            <div class="quick-link-icon" style="background:rgba(225,48,108,0.1); color:#e1306c;"><i data-lucide="instagram"></i></div>
+                            <span>Instagram</span>
+                        </a>
+                        <a href="https://pinterest.com" target="_blank" class="quick-link">
+                            <div class="quick-link-icon" style="background:rgba(230,0,35,0.1); color:#e60023;"><i data-lucide="image"></i></div>
+                            <span>Pinterest</span>
+                        </a>
+                        <a href="https://chat.openai.com" target="_blank" class="quick-link">
+                            <div class="quick-link-icon" style="background:rgba(16,185,129,0.1); color:#10b981;"><i data-lucide="bot"></i></div>
+                            <span>ChatGPT</span>
+                        </a>
+                        <a href="https://tempmail.la" target="_blank" class="quick-link">
+                            <div class="quick-link-icon" style="background:rgba(255,107,107,0.1); color:#ff6b6b;"><i data-lucide="mail"></i></div>
+                            <span>Email Temp</span>
+                        </a>
+                        <a href="https://www.canva.com/brand/join?token=szXGuUeHVbghjU-vZFhIuA&referrer=team-invite" target="_blank" class="quick-link">
+                            <div class="quick-link-icon" style="background:rgba(0,201,255,0.1); color:#00c9ff;"><i data-lucide="users"></i></div>
+                            <span>Canva Equipe</span>
+                        </a>
                     </div>
                 </div>
 
@@ -176,17 +229,19 @@
             startClock();
             if (typeof lucide !== 'undefined') lucide.createIcons();
             const today = new Date();
-            document.getElementById('today-date').textContent = today.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+            const dayEl = document.getElementById('today-date');
+            if (dayEl) dayEl.textContent = today.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
         });
-
 
         function startClock() {
             const update = () => {
                 const now = new Date();
-                document.getElementById('current-time').textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                const clockEl = document.getElementById('current-time');
+                if (clockEl) clockEl.textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
                 const hour = now.getHours();
                 const greeting = hour < 12 ? 'BOM DIA' : hour < 18 ? 'BOA TARDE' : 'BOA NOITE';
-                document.getElementById('greeting').textContent = greeting + ' • Admin';
+                const greetEl = document.getElementById('greeting');
+                if (greetEl) greetEl.textContent = greeting + ' • Admin';
             };
             update();
             setInterval(update, 1000);
@@ -210,8 +265,6 @@
             closeSettingsModal();
             location.reload();
         }
-        
-        window.updateStats = updateStats;
     </script>
 </body>
 </html>
