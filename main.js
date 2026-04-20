@@ -5,12 +5,15 @@
 // ===========================
 const OLLAMA_URL = 'http://localhost:11434/api/chat';
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
 
 // Cleanup residual storage
 localStorage.removeItem('czd_notes');
 localStorage.removeItem('czd_total_queries');
 
 const getGroqKey = () => localStorage.getItem('czd_groq_key') || '';
+const getDeepSeekKey = () => localStorage.getItem('czd_deepseek_key') || '';
+const getAIProvider = () => localStorage.getItem('czd_ai_provider') || 'groq';
 const getAIModel = () => localStorage.getItem('czd_ai_model') || 'llama-3.1-8b-instant';
 
 const SYSTEM_CTX = `Você é a ASSISTENTE DE MARKETING do ZERO MARKETING HQ — um painel de automação para o Clube Zero Dívidas.
@@ -58,15 +61,22 @@ async function generateContent(prompt) {
     
     const typingIndicator = showTyping();
 
-    // 1. TRY GROQ
-    const activeKey = getGroqKey();
-    if (activeKey) {
+    const provider = getAIProvider();
+    let apiUrl = GROQ_URL;
+    let apiKey = getGroqKey();
+
+    if (provider === 'deepseek') {
+        apiUrl = DEEPSEEK_URL;
+        apiKey = getDeepSeekKey();
+    }
+
+    if (apiKey) {
         try {
-            console.log("Tentando conexão com Groq...");
-            const res = await fetch(GROQ_URL, {
+            console.log(`Tentando conexão com ${provider}...`);
+            const res = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 
-                    'Authorization': `Bearer ${activeKey}`, 
+                    'Authorization': `Bearer ${apiKey}`, 
                     'Content-Type': 'application/json' 
                 },
                 body: JSON.stringify({
@@ -87,19 +97,19 @@ async function generateContent(prompt) {
                 return;
             } else {
                 const errData = await res.json().catch(() => ({}));
-                console.error("Erro Groq:", res.status, errData);
+                console.error(`Erro ${provider}:`, res.status, errData);
                 throw new Error(`Erro na API (${res.status}): ${errData.error?.message || 'Falha na resposta'}`);
             }
         } catch (e) { 
-            console.error("Groq Catch:", e);
+            console.error(`${provider} Catch:`, e);
             if (e.message.includes('Failed to fetch')) {
-                lastError = "Erro de Conexão (CORS ou Internet). A Groq pode estar bloqueando chamadas diretas do navegador.";
+                lastError = `Erro de Conexão (CORS ou Internet). O provedor ${provider} pode estar bloqueando chamadas directas do navegador.`;
             } else {
                 lastError = e.message;
             }
         }
     } else {
-        lastError = "Chave API Groq não configurada. Vá em 'Configurações' e insira sua chave.";
+        lastError = `Chave API do ${provider} não configurada. Vá em 'Configurações' e insira sua chave.`;
     }
 
     // 2. TRY OLLAMA (Local)
@@ -244,6 +254,89 @@ window.clearOutput = () => {
     if (out) out.innerHTML = '';
     const actions = document.getElementById('gen-actions');
     if (actions) actions.style.display = 'none';
+};
+
+window.testConnection = async () => {
+    const status = document.getElementById('connection-status');
+    const btn = document.getElementById('test-connection-btn');
+    const provider = document.getElementById('ai-provider-select').value;
+    
+    let key, url, model;
+    if (provider === 'groq') {
+        key = document.getElementById('groq-key-input').value.trim();
+        url = GROQ_URL;
+        model = 'llama-3.1-8b-instant';
+    } else {
+        key = document.getElementById('deepseek-key-input').value.trim();
+        url = DEEPSEEK_URL;
+        model = 'deepseek-chat';
+    }
+    
+    if (!key) {
+        if (status) {
+            status.style.display = 'block';
+            status.style.background = 'rgba(255,100,100,0.2)';
+            status.style.border = '1px solid rgba(255,100,100,0.5)';
+            status.style.color = '#ff6b6b';
+            status.innerHTML = `<i data-lucide="alert-circle" style="width:14px; margin-right: 6px;"></i>Cole sua chave do ${provider} primeiro!`;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+        return;
+    }
+    
+    if (status) {
+        status.style.display = 'block';
+        status.style.background = 'rgba(255,200,0,0.2)';
+        status.style.border = '1px solid rgba(255,200,0,0.5)';
+        status.style.color = '#ffc800';
+        status.innerHTML = `<i data-lucide="loader" class="spin" style="width:14px; margin-right: 6px;"></i>Testando ${provider}...`;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+    if (btn) btn.disabled = true;
+    
+    try {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${key}`, 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({
+                model: model,
+                messages: [{ role: 'user', content: 'Olá' }],
+                max_tokens: 5
+            })
+        });
+        
+        if (res.ok) {
+            if (status) {
+                status.style.background = 'rgba(0,255,150,0.2)';
+                status.style.border = '1px solid rgba(0,255,150,0.5)';
+                status.style.color = '#00ff96';
+                status.innerHTML = `<i data-lucide="check-circle" style="width:14px; margin-right: 6px;"></i>Conexão OK! Chave ${provider} válida.`;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        } else {
+            const err = await res.json().catch(() => ({}));
+            if (status) {
+                status.style.background = 'rgba(255,100,100,0.2)';
+                status.style.border = '1px solid rgba(255,100,100,0.5)';
+                status.style.color = '#ff6b6b';
+                status.innerHTML = `<i data-lucide="alert-circle" style="width:14px; margin-right: 6px;"></i>Erro ${res.status}: ${err.error?.message || 'Chave inválida'}`;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+    } catch (e) {
+        if (status) {
+            status.style.background = 'rgba(255,100,100,0.2)';
+            status.style.border = '1px solid rgba(255,100,100,0.5)';
+            status.style.color = '#ff6b6b';
+            status.innerHTML = `<i data-lucide="alert-circle" style="width:14px; margin-right: 6px;"></i>Erro: Verifique sua internet ou CORS.`;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+    }
+    
+    if (btn) btn.disabled = false;
 };
 
 // ===========================

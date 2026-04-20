@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zero Marketing HQ | Admin Elite</title>
     <script src="https://unpkg.com/lucide@latest" defer></script>
-  <script type="module" crossorigin src="./assets/index-BhzpYUi0.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-DQFyuq5v.css">
+  <script type="module" crossorigin src="./assets/index-Bb6gxYRK.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DzhvPbk9.css">
 </head>
 <body class="fade-in">
     <div class="app-shell">
@@ -230,18 +230,53 @@
             
             <div style="display: flex; flex-direction: column; gap: 20px;">
                 <div>
-                    <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 8px;">Groq API Key</label>
-                    <input type="password" id="groq-key-input" class="input-wrapper" style="width:100%; padding: 12px;" placeholder="Cole sua chave aqui...">
-                </div>
-                <div>
-                    <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 8px;">Modelo AI</label>
-                    <select id="ai-model-select" class="input-wrapper" style="width: 100%; padding: 12px;">
-                        <option value="llama-3.1-8b-instant">LLaMA-3.1 8B (Rápido)</option>
-                        <option value="llama-3.3-70b-versatile">LLaMA-3.3 70B (Poderoso)</option>
-                        <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+                    <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="layers" style="width:14px"></i> Provedor AI
+                    </label>
+                    <select id="ai-provider-select" class="input-wrapper" style="width: 100%; padding: 12px;" onchange="toggleProviderFields()">
+                        <option value="groq">Groq Cloud (Recomendado)</option>
+                        <option value="deepseek">DeepSeek (Open Source)</option>
                     </select>
                 </div>
-                <button class="btn-primary" onclick="saveSettings()">Salvar</button>
+
+                <div id="groq-fields">
+                    <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="key" style="width:14px"></i> Groq API Key
+                    </label>
+                    <input type="password" id="groq-key-input" class="input-wrapper" style="width:100%; padding: 12px;" placeholder="gsk_...">
+                </div>
+
+                <div id="deepseek-fields" style="display:none">
+                    <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="key" style="width:14px"></i> DeepSeek API Key
+                    </label>
+                    <input type="password" id="deepseek-key-input" class="input-wrapper" style="width:100%; padding: 12px;" placeholder="sk-...">
+                </div>
+
+                <button class="btn-primary" id="test-connection-btn" onclick="testConnection()" style="background: var(--surface-3); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i data-lucide="wifi" style="width:14px"></i> Testar Conexão
+                </button>
+                <div id="connection-status" style="display: none; padding: 12px; border-radius: 8px; font-size: 0.8rem;"></div>
+
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="cpu" style="width:14px"></i> Modelo AI
+                    </label>
+                    <select id="ai-model-select" class="input-wrapper" style="width: 100%; padding: 12px;">
+                        <!-- Groq Models -->
+                        <optgroup label="Groq Models" id="groq-models">
+                            <option value="llama-3.1-8b-instant">LLaMA 3.1 8B Instant</option>
+                            <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B Versatile</option>
+                            <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+                        </optgroup>
+                        <!-- DeepSeek Models -->
+                        <optgroup label="DeepSeek Models" id="deepseek-models" style="display:none">
+                            <option value="deepseek-chat">DeepSeek V3 (Chat)</option>
+                            <option value="deepseek-reasoner">DeepSeek R1 (Reasoner)</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <button class="btn-primary" onclick="saveSettings()">Salvar Configurações</button>
             </div>
         </div>
     </div>
@@ -271,9 +306,36 @@
             setInterval(update, 1000);
         }
 
+        function toggleProviderFields() {
+            const provider = document.getElementById('ai-provider-select').value;
+            const groqFields = document.getElementById('groq-fields');
+            const deepseekFields = document.getElementById('deepseek-fields');
+            const groqModels = document.getElementById('groq-models');
+            const deepseekModels = document.getElementById('deepseek-models');
+            const modelSelect = document.getElementById('ai-model-select');
+
+            if (provider === 'groq') {
+                groqFields.style.display = 'block';
+                deepseekFields.style.display = 'none';
+                groqModels.style.display = 'block';
+                deepseekModels.style.display = 'none';
+                modelSelect.value = 'llama-3.1-8b-instant';
+            } else {
+                groqFields.style.display = 'none';
+                deepseekFields.style.display = 'block';
+                groqModels.style.display = 'none';
+                deepseekModels.style.display = 'block';
+                modelSelect.value = 'deepseek-chat';
+            }
+        }
+
         function openSettingsModal() {
+            const provider = localStorage.getItem('czd_ai_provider') || 'groq';
+            document.getElementById('ai-provider-select').value = provider;
             document.getElementById('groq-key-input').value = localStorage.getItem('czd_groq_key') || '';
-            document.getElementById('ai-model-select').value = localStorage.getItem('czd_ai_model') || 'llama-3.1-8b-instant';
+            document.getElementById('deepseek-key-input').value = localStorage.getItem('czd_deepseek_key') || '';
+            document.getElementById('ai-model-select').value = localStorage.getItem('czd_ai_model') || (provider === 'groq' ? 'llama-3.1-8b-instant' : 'deepseek-chat');
+            toggleProviderFields();
             document.getElementById('settings-modal').classList.add('active');
         }
 
@@ -282,10 +344,16 @@
         }
 
         function saveSettings() {
-            const key = document.getElementById('groq-key-input').value.trim();
+            const provider = document.getElementById('ai-provider-select').value;
+            const groqKey = document.getElementById('groq-key-input').value.trim();
+            const deepseekKey = document.getElementById('deepseek-key-input').value.trim();
             const model = document.getElementById('ai-model-select').value;
-            localStorage.setItem('czd_groq_key', key);
+            
+            localStorage.setItem('czd_ai_provider', provider);
+            localStorage.setItem('czd_groq_key', groqKey);
+            localStorage.setItem('czd_deepseek_key', deepseekKey);
             localStorage.setItem('czd_ai_model', model);
+            
             closeSettingsModal();
             location.reload();
         }
