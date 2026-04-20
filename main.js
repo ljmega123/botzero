@@ -6,6 +6,9 @@ import './style.css';
 const OLLAMA_URL = 'http://localhost:11434/api/chat';
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
+// Cleanup residual storage
+localStorage.removeItem('czd_notes');
+
 const getGroqKey = () => localStorage.getItem('czd_groq_key') || '';
 const getAIModel = () => localStorage.getItem('czd_ai_model') || 'llama-3.1-8b-instant';
 
