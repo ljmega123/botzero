@@ -8,6 +8,7 @@ const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 // Cleanup residual storage
 localStorage.removeItem('czd_notes');
+localStorage.removeItem('czd_total_queries');
 
 const getGroqKey = () => localStorage.getItem('czd_groq_key') || '';
 const getAIModel = () => localStorage.getItem('czd_ai_model') || 'llama-3.1-8b-instant';
@@ -47,11 +48,6 @@ async function generateContent(prompt) {
     appendMessage('user', prompt);
     
     const typingIndicator = showTyping();
-    
-    // Increment Stats
-    const currentQueries = parseInt(localStorage.getItem('czd_total_queries')) || 0;
-    localStorage.setItem('czd_total_queries', currentQueries + 1);
-    if (window.updateStats) window.updateStats();
 
     // 1. TRY GROQ
     const activeKey = getGroqKey();

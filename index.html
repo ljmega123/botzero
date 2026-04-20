@@ -77,14 +77,7 @@
             </header>
 
             <div class="dashboard-content">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-card-icon blue">
-                            <i data-lucide="message-square"></i>
-                        </div>
-                        <div class="stat-card-value" id="total-queries">0</div>
-                        <div class="stat-card-label">Consultas AI Total</div>
-                    </div>
+                <div class="stats-grid" style="grid-template-columns: 1fr 1fr">
                     <div class="stat-card">
                         <div class="stat-card-icon green">
                             <i data-lucide="zap"></i>
@@ -180,17 +173,12 @@
     <script type="module" src="/main.js"></script>
     <script>
         window.addEventListener('load', () => {
-            updateStats();
             startClock();
             if (typeof lucide !== 'undefined') lucide.createIcons();
-        });
-
-        function updateStats() {
-            const queries = localStorage.getItem('czd_total_queries') || 0;
-            document.getElementById('total-queries').textContent = queries;
             const today = new Date();
             document.getElementById('today-date').textContent = today.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
-        }
+        });
+
 
         function startClock() {
             const update = () => {
