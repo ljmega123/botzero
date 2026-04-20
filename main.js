@@ -1,4 +1,4 @@
-import './style.css';
+// main.js - Logic for Zero Marketing AI
 
 // ===========================
 // CONFIG
