@@ -24,14 +24,23 @@ const PROMPT_MAP = {
     conteudo: [
         { label: "📧 Email de Venda", prompt: "Escreva um email persuasivo para oferecer o serviço de recuperação de crédito." },
         { label: "🎬 Roteiro Reels", prompt: "Crie um roteiro de Reels de 30s viral sobre como limpar o nome legalmente." },
-        { label: "✍️ Legenda Engajamento", prompt: "Escreva uma legenda persuasiva para um post sobre o Clube Zero Dívidas." }
+        { label: "✍️ Legenda Engajamento", prompt: "Escreva uma legenda persuasiva para um post sobre o Clube Zero Dívidas." },
+        { label: "📝 Copy Vendas", prompt: "Crie um copy de vendas direto para post de Instagram sobre quitação de dívidas." },
+        { label: "💼 Post Institucional", prompt: "Escreva um post profissional apresentando o Clube Zero Dívidas." },
+        { label: "🎤 Story Raso", prompt: "Crie um texto para story explicando como funciona a recuperação de crédito." }
     ],
     vendas: [
-        { label: "💰 Script WhatsApp", prompt: "Crie um script de fechamento via WhatsApp para um cliente interessado." },
-        { label: "🛡️ Quebra Objeções", prompt: "Como responder quando o cliente diz que o serviço demora?" }
+        { label: "💬 Script WhatsApp", prompt: "Crie um script de fechamento via WhatsApp para um cliente interessado." },
+        { label: "🛡️ Quebra Objeções", prompt: "Como responder quando o cliente diz que o serviço demora?" },
+        { label: "💰 Proposta Comercial", prompt: "Crie uma proposta comercial atrativa para novos clientes." },
+        { label: "📞 Script Ligação", prompt: "Elabore um script para ligação de prospecção." },
+        { label: "🎁 Oferta Irresistível", prompt: "Crie uma oferta especial para conversão rápida." }
     ],
     estrategia: [
-        { label: "🎯 Plano 7 dias", prompt: "Trace uma estratégia de conteúdo para os próximos 7 dias." }
+        { label: "📅 Plano 7 dias", prompt: "Trace uma estratégia de conteúdo para os próximos 7 dias." },
+        { label: "🎯 Funil Completo", prompt: "Descreva um funil de vendas completo para recuperação de crédito." },
+        { label: "📈 Tráfego", prompt: "Sugira estratégias de tráfego pago para o nicho de finanças." },
+        { label: "🔄 Automação", prompt: "Liste ideias de automações para WhatsApp e email." }
     ]
 };
 
@@ -53,6 +62,7 @@ async function generateContent(prompt) {
     const activeKey = getGroqKey();
     if (activeKey) {
         try {
+            console.log("Tentando conexão com Groq...");
             const res = await fetch(GROQ_URL, {
                 method: 'POST',
                 headers: { 
@@ -75,12 +85,26 @@ async function generateContent(prompt) {
                 typingIndicator.remove();
                 appendMessage('ai', data.choices[0].message.content, true);
                 return;
+            } else {
+                const errData = await res.json().catch(() => ({}));
+                console.error("Erro Groq:", res.status, errData);
+                throw new Error(`Erro na API (${res.status}): ${errData.error?.message || 'Falha na resposta'}`);
             }
-        } catch (e) { console.error("Groq Error:", e); }
+        } catch (e) { 
+            console.error("Groq Catch:", e);
+            if (e.message.includes('Failed to fetch')) {
+                lastError = "Erro de Conexão (CORS ou Internet). A Groq pode estar bloqueando chamadas diretas do navegador.";
+            } else {
+                lastError = e.message;
+            }
+        }
+    } else {
+        lastError = "Chave API Groq não configurada. Vá em 'Configurações' e insira sua chave.";
     }
 
     // 2. TRY OLLAMA (Local)
     try {
+        console.log("Tentando Ollama local...");
         const ctrl = new AbortController();
         setTimeout(() => ctrl.abort(), 2000);
         const res = await fetch(OLLAMA_URL, {
@@ -99,12 +123,14 @@ async function generateContent(prompt) {
             appendMessage('ai', data.message.content, true);
             return;
         }
-    } catch (e) { /* ignore */ }
+    } catch (e) { console.log("Ollama não disponível."); }
 
-    // 3. FALLBACK
+    // 3. FINAL FALLBACK
     typingIndicator.remove();
-    appendMessage('ai', "Desculpe, não consegui conectar aos servidores de IA. Verifique sua chave Groq nas configurações.", true);
+    appendMessage('ai', `❌ Erro: ${lastError}\n\nNota: Se você está no GitHub Pages, chaves de API podem falhar por segurança (CORS). Tente rodar localmente ou verifique sua chave no console.`, true);
 }
+
+let lastError = "";
 
 // ===========================
 // UI HELPERS
