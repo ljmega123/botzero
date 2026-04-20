@@ -101,6 +101,30 @@
             </header>
 
             <div class="dashboard-content">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card" style="animation: slideUp 0.5s ease forwards;">
+                        <div class="stat-card-icon green"><i data-lucide="message-circle"></i></div>
+                        <div class="stat-card-value" style="color:var(--primary)">0</div>
+                        <div class="stat-card-label">Mensagens Hoje</div>
+                    </div>
+                    <div class="stat-card" style="animation: slideUp 0.5s ease forwards; animation-delay: 0.1s;">
+                        <div class="stat-card-icon blue"><i data-lucide="file-text"></i></div>
+                        <div class="stat-card-value" style="color:var(--secondary)">0</div>
+                        <div class="stat-card-label">Copies Gerados</div>
+                    </div>
+                    <div class="stat-card" style="animation: slideUp 0.5s ease forwards; animation-delay: 0.2s;">
+                        <div class="stat-card-icon yellow"><i data-lucide="trending-up"></i></div>
+                        <div class="stat-card-value" style="color:var(--warning)">0</div>
+                        <div class="stat-card-label">Conversões</div>
+                    </div>
+                    <div class="stat-card" style="animation: slideUp 0.5s ease forwards; animation-delay: 0.3s;">
+                        <div class="stat-card-icon red"><i data-lucide="users"></i></div>
+                        <div class="stat-card-value" style="color:var(--accent)">0</div>
+                        <div class="stat-card-label">Leads</div>
+                    </div>
+                </div>
+
                 <!-- Acesso Rápido Restaurado -->
                 <div class="quick-access">
                     <div class="quick-access-grid">
@@ -223,7 +247,7 @@
 
     <div id="toast"></div>
 
-    <script type="module" src="/main.js"></script>
+    <script type="module" src="main.js"></script>
     <script>
         window.addEventListener('load', () => {
             startClock();

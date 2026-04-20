@@ -739,7 +739,7 @@ body {
 .stat-card:hover {
   border-color: var(--border-glow);
   transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg), 0 0 30px var(--primary-glow);
 }
 
 .stat-card:hover::before {
@@ -837,16 +837,26 @@ body {
   background: var(--surface-3);
   border-color: var(--border-hover);
   color: var(--text);
-  transform: translateY(-2px);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.quick-link:active {
+  transform: translateY(-2px) scale(1);
 }
 
 .quick-link-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: var(--transition);
+}
+
+.quick-link:hover .quick-link-icon {
+  transform: scale(1.1);
 }
 
 /* ===== GRID CONTAINER ===== */
