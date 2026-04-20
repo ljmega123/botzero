@@ -7,7 +7,6 @@ const OLLAMA_URL = 'http://localhost:11434/api/chat';
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
 
-// Cleanup residual storage
 localStorage.removeItem('czd_notes');
 localStorage.removeItem('czd_total_queries');
 
@@ -15,6 +14,34 @@ const getGroqKey = () => localStorage.getItem('czd_groq_key') || '';
 const getDeepSeekKey = () => localStorage.getItem('czd_deepseek_key') || '';
 const getAIProvider = () => localStorage.getItem('czd_ai_provider') || 'groq';
 const getAIModel = () => localStorage.getItem('czd_ai_model') || 'llama-3.1-8b-instant';
+
+const STATS = {
+    get: () => JSON.parse(localStorage.getItem('czd_stats') || '{"msgs":0,"copies":0,"queries":0,"start":' + Date.now() + '}'),
+    increment: (field) => {
+        const s = STATS.get();
+        s[field] = (s[field] || 0) + 1;
+        localStorage.setItem('czd_stats', JSON.stringify(s));
+        return s;
+    },
+    updateUI: () => {
+        const s = STATS.get();
+        const ms = document.getElementById('stat-messages');
+        const cp = document.getElementById('stat-copies');
+        const qy = document.getElementById('stat-queries');
+        const tm = document.getElementById('stat-time');
+        
+        if (ms) ms.textContent = s.msgs || 0;
+        if (cp) cp.textContent = s.copies || 0;
+        if (qy) qy.textContent = s.queries || 0;
+        
+        if (tm) {
+            const diffMs = Date.now() - (s.start || Date.now());
+            const hours = Math.floor(diffMs / 3600000);
+            const mins = Math.floor((diffMs % 3600000) / 60000);
+            tm.textContent = `${hours.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}`;
+        }
+    }
+};
 
 const SYSTEM_CTX = `Você é a ASSISTENTE DE MARKETING do ZERO MARKETING HQ — um painel de automação para o Clube Zero Dívidas.
 Sua missão é ajudar o administrador a criar roteiros, copies, posts e estratégias de marketing digital para o nicho de recuperação de crédito.
@@ -56,8 +83,10 @@ async function generateContent(prompt) {
     
     if (placeholder) placeholder.style.display = 'none';
     
-    // Add User Message
     appendMessage('user', prompt);
+    STATS.increment('queries');
+    STATS.increment('msgs');
+    STATS.updateUI();
     
     const typingIndicator = showTyping();
 
@@ -94,6 +123,8 @@ async function generateContent(prompt) {
                 const data = await res.json();
                 typingIndicator.remove();
                 appendMessage('ai', data.choices[0].message.content, true);
+                STATS.increment('copies');
+                STATS.updateUI();
                 return;
             } else {
                 const errData = await res.json().catch(() => ({}));
@@ -274,22 +305,16 @@ window.testConnection = async () => {
     
     if (!key) {
         if (status) {
-            status.style.display = 'block';
-            status.style.background = 'rgba(255,100,100,0.2)';
-            status.style.border = '1px solid rgba(255,100,100,0.5)';
-            status.style.color = '#ff6b6b';
-            status.innerHTML = `<i data-lucide="alert-circle" style="width:14px; margin-right: 6px;"></i>Cole sua chave do ${provider} primeiro!`;
+            status.className = 'status-box error';
+            status.innerHTML = `<i data-lucide="alert-circle" style="width:14px"></i>Cole sua chave do ${provider} primeiro!`;
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
         return;
     }
     
     if (status) {
-        status.style.display = 'block';
-        status.style.background = 'rgba(255,200,0,0.2)';
-        status.style.border = '1px solid rgba(255,200,0,0.5)';
-        status.style.color = '#ffc800';
-        status.innerHTML = `<i data-lucide="loader" class="spin" style="width:14px; margin-right: 6px;"></i>Testando ${provider}...`;
+        status.className = 'status-box loading';
+        status.innerHTML = `<i data-lucide="loader" class="spin" style="width:14px"></i>Testando ${provider}...`;
         if (typeof lucide !== 'undefined') lucide.createIcons();
     }
     if (btn) btn.disabled = true;
@@ -310,28 +335,22 @@ window.testConnection = async () => {
         
         if (res.ok) {
             if (status) {
-                status.style.background = 'rgba(0,255,150,0.2)';
-                status.style.border = '1px solid rgba(0,255,150,0.5)';
-                status.style.color = '#00ff96';
-                status.innerHTML = `<i data-lucide="check-circle" style="width:14px; margin-right: 6px;"></i>Conexão OK! Chave ${provider} válida.`;
+                status.className = 'status-box success';
+                status.innerHTML = `<i data-lucide="check-circle" style="width:14px"></i>Conexão OK! Chave ${provider} válida.`;
                 if (typeof lucide !== 'undefined') lucide.createIcons();
             }
         } else {
             const err = await res.json().catch(() => ({}));
             if (status) {
-                status.style.background = 'rgba(255,100,100,0.2)';
-                status.style.border = '1px solid rgba(255,100,100,0.5)';
-                status.style.color = '#ff6b6b';
-                status.innerHTML = `<i data-lucide="alert-circle" style="width:14px; margin-right: 6px;"></i>Erro ${res.status}: ${err.error?.message || 'Chave inválida'}`;
+                status.className = 'status-box error';
+                status.innerHTML = `<i data-lucide="alert-circle" style="width:14px"></i>Erro ${res.status}: ${err.error?.message || 'Chave inválida'}`;
                 if (typeof lucide !== 'undefined') lucide.createIcons();
             }
         }
     } catch (e) {
         if (status) {
-            status.style.background = 'rgba(255,100,100,0.2)';
-            status.style.border = '1px solid rgba(255,100,100,0.5)';
-            status.style.color = '#ff6b6b';
-            status.innerHTML = `<i data-lucide="alert-circle" style="width:14px; margin-right: 6px;"></i>Erro: Verifique sua internet ou CORS.`;
+            status.className = 'status-box error';
+            status.innerHTML = `<i data-lucide="alert-circle" style="width:14px"></i>Erro: Verifique sua internet ou CORS.`;
             if (typeof lucide !== 'undefined') lucide.createIcons();
         }
     }
@@ -345,4 +364,6 @@ window.testConnection = async () => {
 document.addEventListener('DOMContentLoaded', () => {
     if (window.renderButtons) window.renderButtons('conteudo');
     if (typeof lucide !== 'undefined') lucide.createIcons();
+    STATS.updateUI();
+    setInterval(STATS.updateUI, 60000);
 });

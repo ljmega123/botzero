@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zero Marketing HQ | Admin Elite</title>
     <script src="https://unpkg.com/lucide@latest" defer></script>
-  <script type="module" crossorigin src="./assets/index-Bb6gxYRK.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-DzhvPbk9.css">
+  <script type="module" crossorigin src="./assets/index-B6WfO0n0.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DudG939o.css">
 </head>
 <body class="fade-in">
     <div class="app-shell">
@@ -102,27 +102,27 @@
             </header>
 
             <div class="dashboard-content">
-                <!-- Stats Cards -->
+                <!-- Quick Stats -->
                 <div class="stats-grid">
                     <div class="stat-card" style="animation: slideUp 0.5s ease forwards;">
                         <div class="stat-card-icon green"><i data-lucide="message-circle"></i></div>
-                        <div class="stat-card-value" style="color:var(--primary)">0</div>
+                        <div class="stat-card-value" style="color:var(--primary)" id="stat-messages">0</div>
                         <div class="stat-card-label">Mensagens Hoje</div>
                     </div>
                     <div class="stat-card" style="animation: slideUp 0.5s ease forwards; animation-delay: 0.1s;">
                         <div class="stat-card-icon blue"><i data-lucide="file-text"></i></div>
-                        <div class="stat-card-value" style="color:var(--secondary)">0</div>
+                        <div class="stat-card-value" style="color:var(--secondary)" id="stat-copies">0</div>
                         <div class="stat-card-label">Copies Gerados</div>
                     </div>
                     <div class="stat-card" style="animation: slideUp 0.5s ease forwards; animation-delay: 0.2s;">
-                        <div class="stat-card-icon yellow"><i data-lucide="trending-up"></i></div>
-                        <div class="stat-card-value" style="color:var(--warning)">0</div>
-                        <div class="stat-card-label">Conversões</div>
+                        <div class="stat-card-icon yellow"><i data-lucide="zap"></i></div>
+                        <div class="stat-card-value" style="color:var(--warning)" id="stat-queries">0</div>
+                        <div class="stat-card-label">Consultas AI</div>
                     </div>
                     <div class="stat-card" style="animation: slideUp 0.5s ease forwards; animation-delay: 0.3s;">
-                        <div class="stat-card-icon red"><i data-lucide="users"></i></div>
-                        <div class="stat-card-value" style="color:var(--accent)">0</div>
-                        <div class="stat-card-label">Leads</div>
+                        <div class="stat-card-icon purple"><i data-lucide="clock"></i></div>
+                        <div class="stat-card-value" style="color:#a855f7" id="stat-time">00:00</div>
+                        <div class="stat-card-label">Tempo Online</div>
                     </div>
                 </div>
 
@@ -223,61 +223,48 @@
     <!-- Settings Modal -->
     <div class="modal-overlay" id="settings-modal">
         <div class="modal">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                <h3>Configurações AI</h3>
-                <button class="btn-ghost" onclick="closeSettingsModal()"><i data-lucide="x"></i></button>
-            </div>
+            <h3 style="margin-bottom: 20px;"><i data-lucide="settings" style="width:18px;vertical-align:middle;margin-right:8px"></i>Configurações AI</h3>
             
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-                <div>
-                    <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                        <i data-lucide="layers" style="width:14px"></i> Provedor AI
-                    </label>
-                    <select id="ai-provider-select" class="input-wrapper" style="width: 100%; padding: 12px;" onchange="toggleProviderFields()">
-                        <option value="groq">Groq Cloud (Recomendado)</option>
-                        <option value="deepseek">DeepSeek (Open Source)</option>
-                    </select>
-                </div>
-
-                <div id="groq-fields">
-                    <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                        <i data-lucide="key" style="width:14px"></i> Groq API Key
-                    </label>
-                    <input type="password" id="groq-key-input" class="input-wrapper" style="width:100%; padding: 12px;" placeholder="gsk_...">
-                </div>
-
-                <div id="deepseek-fields" style="display:none">
-                    <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                        <i data-lucide="key" style="width:14px"></i> DeepSeek API Key
-                    </label>
-                    <input type="password" id="deepseek-key-input" class="input-wrapper" style="width:100%; padding: 12px;" placeholder="sk-...">
-                </div>
-
-                <button class="btn-primary" id="test-connection-btn" onclick="testConnection()" style="background: var(--surface-3); display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <i data-lucide="wifi" style="width:14px"></i> Testar Conexão
-                </button>
-                <div id="connection-status" style="display: none; padding: 12px; border-radius: 8px; font-size: 0.8rem;"></div>
-
-                <div>
-                    <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                        <i data-lucide="cpu" style="width:14px"></i> Modelo AI
-                    </label>
-                    <select id="ai-model-select" class="input-wrapper" style="width: 100%; padding: 12px;">
-                        <!-- Groq Models -->
-                        <optgroup label="Groq Models" id="groq-models">
-                            <option value="llama-3.1-8b-instant">LLaMA 3.1 8B Instant</option>
-                            <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B Versatile</option>
-                            <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
-                        </optgroup>
-                        <!-- DeepSeek Models -->
-                        <optgroup label="DeepSeek Models" id="deepseek-models" style="display:none">
-                            <option value="deepseek-chat">DeepSeek V3 (Chat)</option>
-                            <option value="deepseek-reasoner">DeepSeek R1 (Reasoner)</option>
-                        </optgroup>
-                    </select>
-                </div>
-                <button class="btn-primary" onclick="saveSettings()">Salvar Configurações</button>
+            <div class="form-group">
+                <label class="form-label"><i data-lucide="server" style="width:14px"></i> Provedor</label>
+                <select id="ai-provider-select" class="form-input" onchange="toggleProviderFields()">
+                    <option value="groq">Groq Cloud</option>
+                    <option value="deepseek">DeepSeek</option>
+                </select>
             </div>
+
+            <div id="groq-fields" class="form-group">
+                <label class="form-label"><i data-lucide="key" style="width:14px"></i> Groq API Key</label>
+                <input type="password" id="groq-key-input" class="form-input" placeholder="gsk_...">
+                <small class="form-hint"><a href="https://console.groq.com/keys" target="_blank">Obter chave</a></small>
+            </div>
+
+            <div id="deepseek-fields" class="form-group" style="display:none">
+                <label class="form-label"><i data-lucide="key" style="width:14px"></i> DeepSeek API Key</label>
+                <input type="password" id="deepseek-key-input" class="form-input" placeholder="sk-...">
+                <small class="form-hint"><a href="https://platform.deepseek.com" target="_blank">Obter chave</a></small>
+            </div>
+
+            <button class="btn-primary" id="test-connection-btn" onclick="testConnection()" style="background: var(--surface-3);">
+                <i data-lucide="wifi" style="width:14px"></i> Testar Conexão
+            </button>
+            <div id="connection-status" class="status-box"></div>
+
+            <div class="form-group">
+                <label class="form-label"><i data-lucide="cpu" style="width:14px"></i> Modelo</label>
+                <select id="ai-model-select" class="form-input">
+                    <optgroup label="Groq">
+                        <option value="llama-3.1-8b-instant">LLaMA 3.1 8B</option>
+                        <option value="llama-3.3-70b-versatile">LLaMA 3.3 70B</option>
+                        <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+                    </optgroup>
+                    <optgroup label="DeepSeek" id="deepseek-models" style="display:none">
+                        <option value="deepseek-chat">DeepSeek V3</option>
+                        <option value="deepseek-reasoner">DeepSeek R1</option>
+                    </optgroup>
+                </select>
+            </div>
+            <button class="btn-primary" onclick="saveSettings()"><i data-lucide="save" style="width:14px"></i> Salvar</button>
         </div>
     </div>
 
